@@ -33,5 +33,5 @@ model Directories {
   id          Int       @id @default(autoincrement())
   user_id     Int
   name        String
-  parent_dir  Int
+  parent_dir  Int?
 }

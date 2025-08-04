@@ -24,14 +24,27 @@ async function getUserFromId(id) {
 
 async function addUser(username, password, first, last) {
     const dbPw = await genPassword(password);
-  await prisma.user.create({
-    data: {
-        email: username,
-        first: first,
-        last: last,
-        password: dbPw
-    },
-  });
+    await prisma.user.create({
+        data: {
+            email: username,
+            first: first,
+            last: last,
+            password: dbPw
+        },
+    });
+    // Now we need to give this user a root directory
+    const user = await prisma.user.findUnique({
+    where: {
+            email: username,
+        }
+    });
+    await prisma.directories.create({
+        data: {
+            user_id: user.id,
+            name: 'root',
+            parent_dir: null
+        }
+    });
 }
 
 
