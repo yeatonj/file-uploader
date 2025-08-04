@@ -1,6 +1,7 @@
 const passport = require('passport');
 const LocalStrategy = require('passport-local').Strategy;
 const { validPassword } = require('../lib/passwordUtils');
+const { getUserFromUsername, getUserFromId } = require('../db/prismaQueries');
 
 const customFields = {
     usernameField: 'uname',
@@ -9,9 +10,7 @@ const customFields = {
 
 async function verifyCallback(username, password, done) {
     try {
-      // !! NEED A METHOD HERE TO GET THE USER ROW BASED ON THE USERNAME WE ENTERED
-      const rows = undefined;
-      const user = rows[0];
+      const user = await getUserFromUsername(username);
 
       if (!user) {
         return done(null, false, { message: "Incorrect username" });
@@ -36,9 +35,7 @@ passport.serializeUser((user, done) => {
 
 passport.deserializeUser(async (id, done) => {
   try {
-    // !! NEED A METHOD HERE TO GET THE USER ROW BASED ON THE USER ID
-    const rows = undefined;
-    const user = rows[0];
+    const user = getUserFromId(id);
 
     done(null, user);
   } catch(err) {

@@ -1,3 +1,5 @@
+const { addUser } = require('../db/prismaQueries');
+
 async function signupGet(req, res) {
     res.render("signup", {
         title: "Signup Page",
@@ -7,7 +9,7 @@ async function signupGet(req, res) {
 
 async function signupPost(req, res) {    
     try {
-        // !! NEED A SIGNUP FUNCTION HERE
+        await addUser(req.body.mail, req.body.pass, req.body.fName, req.body.lName);
         res.redirect("/login");
     } catch {
         res.render("signup", {

@@ -6,6 +6,9 @@
 </head>
 <body>
   <h1><%= title %></h1>
+  <% if (message) {%>
+      <p><%= message %></p>
+  <%}%>
   <form action="/login" method="post">
     <label for="uname">Username:</label>
     <input type="email" name="uname" id="uname">
