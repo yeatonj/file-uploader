@@ -1,0 +1,32 @@
+<!-- views/index.ejs -->
+<!DOCTYPE html>
+<html>
+<head>
+  <title><%= title %></title>
+</head>
+<body>
+    <h1><%= title %></h1>
+    <form action="signup" method="post">
+        <label for="mail">Email:</label>
+        <input type="email" name="mail" id="mail" required>
+
+        <label for="fName">First Name:</label>
+        <input type="text" name="fName" id="fName" required>
+
+        <label for="lName">Last Name:</label>
+        <input type="text" name="lName" id="lName" required>
+
+        <label for="pass">Password:</label>
+        <input type="password" name="pass" id="pass" required>
+
+        <label for="passConfirm">Confirm Password:</label>
+        <input type="password" name="passConfirm" id="passConfirm" required>
+
+        <button type="submit">Create Account:</button>
+    </form>
+    <% if (message) {%>
+        <h2><%= title %></h2>
+    <% } %>
+  
+</body>
+</html>

@@ -1,0 +1,20 @@
+<!-- views/login.ejs -->
+<!DOCTYPE html>
+<html>
+<head>
+  <title><%= title %></title>
+</head>
+<body>
+  <h1><%= title %></h1>
+  <form action="/login" method="post">
+    <label for="uname">Username:</label>
+    <input type="email" name="uname" id="uname">
+
+    <label for="pw">Password:</label>
+    <input type="password" name="pw" id="pw">
+
+    <button type="submit">Login</button>
+  </form>
+  <a href="/">Home</a>
+</body>
+</html>
