@@ -47,9 +47,20 @@ async function addUser(username, password, first, last) {
     });
 }
 
+async function addDirectory(userId, dirName, parent) {
+    await prisma.directories.create({
+        data: {
+            user_id: userId,
+            name: dirName,
+            parent_dir: parent
+        }
+    });
+}
+
 
 module.exports = {
   getUserFromUsername,
   getUserFromId,
-  addUser
+  addUser,
+  addDirectory
 }
