@@ -3,6 +3,10 @@
 const express = require("express");
 const app = express();
 
+// Required for prisma session store
+const { PrismaSessionStore } = require('@quixo3/prisma-session-store');
+const { PrismaClient } = require('./generated/prisma');
+
 // Initialize dotenv
 require('dotenv').config();
 
@@ -24,10 +28,22 @@ const session = require("express-session");
 const passport = require("passport");
 
 app.use(session({
+    cookie: {
+     maxAge: 7 * 24 * 60 * 60 * 1000 // ms
+    },
     secret: process.env.SECRET,
-    resave: false,
-    saveUninitialized:false
-}));
+    resave: true,
+    saveUninitialized: true,
+    store: new PrismaSessionStore(
+      new PrismaClient(),
+      {
+        checkPeriod: 2 * 60 * 1000,  //ms
+        dbRecordIdIsSessionId: true,
+        dbRecordIdFunction: undefined,
+      }
+    )
+  }
+));
 
 // Authenticate passport
 app.use(passport.session());
