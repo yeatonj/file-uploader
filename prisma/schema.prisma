@@ -28,3 +28,10 @@ model Session {
   data      String
   expiresAt   DateTime
 }
+
+model Directories {
+  id          Int       @id @default(autoincrement())
+  user_id     Int
+  name        String
+  parent_dir  Int
+}
