@@ -57,10 +57,29 @@ async function addDirectory(userId, dirName, parent) {
     });
 }
 
+async function getDirectoryOwnerId(dirId) {
+    const details = await prisma.directories.findFirst({
+        where: {
+            id: dirId
+        }
+    });
+    return details.user_id;
+}
+
+async function getDirectoryContents(dirId) {
+    const contents = await prisma.directories.findMany({
+        where: {
+            parent_dir: dirId
+        }
+    });
+    return contents;
+}
 
 module.exports = {
   getUserFromUsername,
   getUserFromId,
   addUser,
-  addDirectory
+  addDirectory,
+  getDirectoryOwnerId,
+  getDirectoryContents
 }

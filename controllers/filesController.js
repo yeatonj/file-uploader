@@ -8,7 +8,6 @@ async function filesGet(req, res) {
             title: "Files with root directory",
         });
     }
- 
 }
 
 async function filesPost(req, res) {    
