@@ -36,6 +36,17 @@ async function viewFileGet(req, res) {
     });
 }
 
+async function viewFileGetDownload(req, res) {
+    const fileDetails = await getFile(parseInt(req.params.fileId));
+    // Make sure we own this file, if not, redirect
+    if (fileDetails === null || req.user === null || fileDetails.owner_id !== req.user.id) {
+        res.redirect("/files");
+        return;
+    }
+    const filePath = path.join(__dirname, uploadDir) + "/" + fileDetails.disk_name;
+    res.download(filePath, fileDetails.name);
+}
+
 const uploadMiddleware = upload.single('upFile');
 
 async function viewFileUploadPost(req, res) {  
@@ -110,4 +121,5 @@ module.exports = {
     viewFileUploadPost,
     viewFileDeletePost,
     uploadMiddleware,
+    viewFileGetDownload
 }

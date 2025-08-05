@@ -9,6 +9,7 @@
   <h3><%= details.name %></h3>
   <p>File size: <%= details.size %> kilobytes</p>
   <p>Uploaded: <%= details.time %></p>
+  <p><a href="./download">Download</a></p>
 
   <form action="/viewfile/delete" method="post">
     <input type="number" name="fileId" id="fileId" hidden readonly value="<%= details.id %>">
