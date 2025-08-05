@@ -1,9 +1,9 @@
-const { getDirectoryOwnerId, getDirectorDetails } = require('../db/prismaQueries');
+const { getDirectoryOwnerId, getDirectoryDetails } = require('../db/prismaQueries');
 
 async function filesGet(req, res) {
     if (req.params.dirId) {
-        const details = await getDirectorDetails(parseInt(req.params.dirId));
-        if (details != null && details.user_id === req.user.id) {
+        const details = await getDirectoryDetails(parseInt(req.params.dirId));
+        if (details != null && detßails.user_id === req.user.id) {
             if (details.parent_dir === null) {
                 res.redirect("/files");
                 return;
