@@ -1,6 +1,8 @@
 const { PrismaClient } = require('../generated/prisma');
 const { genPassword } = require("../lib/passwordUtils");
 
+const { deleteFile } = require("../fs_util/manager");
+
 const prisma = new PrismaClient();
 
 async function getUserFromUsername(username) {
@@ -106,7 +108,9 @@ async function deleteDirectory(dirId) {
     if (details.name === "root" && details.parent_dir === null) {
         return;
     }
-    // Now, go ahead and delete. We'll need to do so recursively.
+    // Delete all files in this directory, including on disk
+    deleteDirFiles(dirId);
+    // Now, go ahead and delete subdirectories. We'll need to do so recursively.
     // First, delete all subdirectories
     const subDir = await getDirectoryContents(dirId);
     for (let i = 0; i < subDir.length; i++) {
@@ -155,7 +159,7 @@ async function getDirFiles(dirId) {
 async function getFile(fileId){
     const res = await prisma.file.findFirst({
         where: {
-            fileId: id,
+            id: fileId,
         },
     });
     return res;
@@ -180,23 +184,26 @@ async function addFile(owner, dir, fName, fSize, fDiskName) {
 }
 
 // Allows us to delete a file from the DB (return name to faciliate deletion on disk)
-async function deleteFile(fileId) {
+async function deleteDBFile(fileId) {
     const deleted = await prisma.file.delete({
         where: {
-            id: filesDirDelete,
+            id: fileId,
         },
     });
     return deleted;
 }
 
-// Allows us to delete all files in a directory (return names to facilitate deletion on disk)
+// Allows us to delete all files in a directory
 async function deleteDirFiles(dirId) {
-    const deleted = await prisma.file.delete({
+    // First, get all the files
+    const deleted = await prisma.file.deleteMany({
         where: {
             dir_id: dirId,
         },
     });
-    return deleted;
+    for (let i = 0; i < deleted.length; i++) {
+        deleteFile(deleted[i].disk_name);
+    }
 }
 
 module.exports = {
@@ -213,6 +220,6 @@ module.exports = {
   getDirFiles,
   getFile,
   addFile,
-  deleteFile,
+  deleteDBFile,
   deleteDirFiles
 }

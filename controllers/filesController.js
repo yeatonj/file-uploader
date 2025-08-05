@@ -1,9 +1,13 @@
-const { getDirectoryDetails, getRootDirectoryDetails, getDirectoryContents, addDirectory, renameDirectory, deleteDirectory } = require('../db/prismaQueries');
+const { getDirFiles, getDirectoryDetails, getRootDirectoryDetails, getDirectoryContents, addDirectory, renameDirectory, deleteDirectory } = require('../db/prismaQueries');
 
 async function filesGet(req, res) {
     let isRoot;
     let details;
     let parentDir = null;
+    if (req.user === undefined) {
+        res.redirect("/");
+        return;
+    }
     if (req.params.dirId) {
         details = await getDirectoryDetails(parseInt(req.params.dirId));
         parentDir = details.parent_dir;
@@ -24,12 +28,14 @@ async function filesGet(req, res) {
         details = await getRootDirectoryDetails(parseInt(req.user.id));
     }
     const dirContents = await getDirectoryContents(details.id);
+    const dirFiles = await getDirFiles(details.id);
     res.render("files", {
         title: "Files in directory " + details.name,
         root: isRoot,
         parent: parentDir,
         id: details.id,
-        contents: dirContents
+        contents: dirContents,
+        files: dirFiles
     });
 }
 

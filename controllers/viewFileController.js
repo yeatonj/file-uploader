@@ -1,4 +1,4 @@
-const { getPathPrefix, addFile, getDirectoryDetails } = require('../db/prismaQueries');
+const { deleteDBFile, getFile, getPathPrefix, addFile, getDirectoryDetails } = require('../db/prismaQueries');
 const multer = require('multer');
 const path = require("node:path");
 const uploadDir = '../uploads';
@@ -23,8 +23,16 @@ async function viewFileGetNoFile(req, res) {
 
 
 async function viewFileGet(req, res) {
+    const fileDetails = await getFile(parseInt(req.params.fileId));
+    // Make sure we own this file, if not, redirect
+    if (fileDetails === null || req.user === null || fileDetails.owner_id !== req.user.id) {
+        res.redirect("/files");
+        return;
+    }
+    
     res.render("viewFile", {
         title: "View File Page",
+        details: fileDetails
     });
 }
 
@@ -83,7 +91,16 @@ async function renameFile(oldName, newName) {
 }
 
 async function viewFileDeletePost(req, res) {
-
+    // Make sure we own this file
+    const fileDetails = await getFile(parseInt(req.body.fileId));
+    if (fileDetails.owner_id !== req.user.id) {
+        res.redirect("/files");
+    }
+    // Delete file from disk
+    deleteFile(path.join(__dirname, uploadDir) + "/" + fileDetails.disk_name);
+    // Remove from database
+    await deleteDBFile(fileDetails.id);
+    res.redirect("/files");
 }
 
 
