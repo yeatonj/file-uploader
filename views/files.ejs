@@ -12,6 +12,15 @@
     <% for (let i = 0; i < contents.length; i++) { %>
         <p>Subdirectory: <a href="/files/<%= contents[i].id %>"><%= contents[i].name %></a></p>
     <%}%>
+
+    <form action="/viewfile/upload" method="post">
+        <label for="upFile">Upload File To Directory: </label>
+        <input type="file" name="upFile" id="upFile">
+        <button type="submit">Upload</button>
+    </form>
+
+    <h3>Directory Controls</h3>
+
     <% if (!root) {%>
         <form action="/files/updatedirname" method="post">
             <label for="newName">Change Directory Name: </label>
