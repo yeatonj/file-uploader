@@ -1,4 +1,4 @@
-const { getDirectoryDetails, getRootDirectoryDetails, getDirectoryContents } = require('../db/prismaQueries');
+const { getDirectoryDetails, getRootDirectoryDetails, getDirectoryContents, addDirectory } = require('../db/prismaQueries');
 
 async function filesGet(req, res) {
     let isRoot;
@@ -29,16 +29,26 @@ async function filesGet(req, res) {
         title: "Files in directory " + details.name,
         root: isRoot,
         parent: parentDir,
+        id: details.id,
         contents: dirContents
     });
 }
 
-async function filesPost(req, res) {    
-    res.redirect("/files");
+
+async function filesDirPost(req, res) {
+    // Make sure we own the parent directory
+    const details = await getDirectoryDetails(parseInt(req.body.parDir));
+    console.log(details)
+    if (details.user_id !== req.user.id) {
+        res.redirect("/files");
+    }
+    // Now add the directory
+    await addDirectory(req.user.id, req.body.dirName, parseInt(req.body.parDir));
+    res.redirect("/files/" + req.body.parDir);
 }
 
 
 module.exports = {
     filesGet,
-    filesPost
+    filesDirPost
 }

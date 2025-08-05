@@ -4,6 +4,6 @@ const filesRouter = Router();
 
 filesRouter.get("/", filesController.filesGet);
 filesRouter.get("/:dirId", filesController.filesGet);
-filesRouter.post("/", filesController.filesPost);
+filesRouter.post("/newdir", filesController.filesDirPost);
 
 module.exports = filesRouter;
