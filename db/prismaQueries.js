@@ -124,14 +124,14 @@ async function deleteDirectory(dirId) {
 async function getPathPrefix(dirId) {
     // Prefix should be userid/dir1id__dir2id__...__dirnid
     // Looking up from the current directory to root
-    let current = await prisma.file.findFirst({
+    let current = await prisma.directories.findFirst({
         where: {
             id: dirId,
         }
     });
-    let prefix = String(current.userId) + "/" + String(current.id);
+    let prefix = String(current.user_id) + "_" + String(current.id);
     while (current.parent_dir) {
-        current = await prisma.file.findFirst({
+        current = await prisma.directories.findFirst({
             where: {
                 id: current.parent_dir,
             }
@@ -163,15 +163,20 @@ async function getFile(fileId){
 
 // Allows us to add a file to the DB
 async function addFile(owner, dir, fName, fSize, fDiskName) {
-    await prisma.file.create({
-        data: {
-            owner_id: owner,
-            dir_id: dir,
-            name: fName,
-            size: fSize,
-            disk_name: fDiskName,
-        },
-    });
+    try {
+        await prisma.file.create({
+            data: {
+                owner_id: owner,
+                dir_id: dir,
+                name: fName,
+                size: fSize,
+                disk_name: fDiskName,
+            },
+        });
+        return true
+    } catch {
+        return false;
+    }
 }
 
 // Allows us to delete a file from the DB (return name to faciliate deletion on disk)
@@ -203,5 +208,11 @@ module.exports = {
   getDirectoryContents,
   getRootDirectoryDetails,
   renameDirectory,
-  deleteDirectory
+  deleteDirectory,
+  getPathPrefix,
+  getDirFiles,
+  getFile,
+  addFile,
+  deleteFile,
+  deleteDirFiles
 }

@@ -13,7 +13,8 @@
         <p>Subdirectory: <a href="/files/<%= contents[i].id %>"><%= contents[i].name %></a></p>
     <%}%>
 
-    <form action="/viewfile/upload" method="post">
+    <form action="/viewfile/upload" method="post" enctype="multipart/form-data">
+        <input type="number" name="dirIdUpload" id="dirIdUpload" hidden readonly value="<%= id %>">
         <label for="upFile">Upload File To Directory: </label>
         <input type="file" name="upFile" id="upFile">
         <button type="submit">Upload</button>
