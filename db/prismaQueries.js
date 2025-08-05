@@ -120,6 +120,80 @@ async function deleteDirectory(dirId) {
     });
 }
 
+// Function gets the prefix for an uploaded file given a directory
+async function getPathPrefix(dirId) {
+    // Prefix should be userid/dir1id__dir2id__...__dirnid
+    // Looking up from the current directory to root
+    let current = await prisma.file.findFirst({
+        where: {
+            id: dirId,
+        }
+    });
+    let prefix = String(current.userId) + "/" + String(current.id);
+    while (current.parent_dir) {
+        current = await prisma.file.findFirst({
+            where: {
+                id: current.parent_dir,
+            }
+        });
+        prefix = prefix + "__" + String(current.id);
+    }
+    return prefix;
+}
+
+// Gets all files in a directory
+async function getDirFiles(dirId) {
+    const res = await prisma.file.findMany({
+        where: {
+            dir_id: dirId,
+        },
+    });
+    return res;
+}
+
+// Gets details of a file
+async function getFile(fileId){
+    const res = await prisma.file.findFirst({
+        where: {
+            fileId: id,
+        },
+    });
+    return res;
+}
+
+// Allows us to add a file to the DB
+async function addFile(owner, dir, fName, fSize, fDiskName) {
+    await prisma.file.create({
+        data: {
+            owner_id: owner,
+            dir_id: dir,
+            name: fName,
+            size: fSize,
+            disk_name: fDiskName,
+        },
+    });
+}
+
+// Allows us to delete a file from the DB (return name to faciliate deletion on disk)
+async function deleteFile(fileId) {
+    const deleted = await prisma.file.delete({
+        where: {
+            id: filesDirDelete,
+        },
+    });
+    return deleted;
+}
+
+// Allows us to delete all files in a directory (return names to facilitate deletion on disk)
+async function deleteDirFiles(dirId) {
+    const deleted = await prisma.file.delete({
+        where: {
+            dir_id: dirId,
+        },
+    });
+    return deleted;
+}
+
 module.exports = {
   getUserFromUsername,
   getUserFromId,
