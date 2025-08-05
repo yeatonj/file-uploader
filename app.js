@@ -10,6 +10,8 @@ const { PrismaClient } = require('./generated/prisma');
 // Initialize dotenv
 require('dotenv').config();
 
+
+
 // Routes
 const indexRouter = require("./routes/indexRouter");
 const loginRouter = require("./routes/loginRouter");
@@ -22,6 +24,13 @@ const viewFileRouter = require("./routes/viewFileRouter");
 const path = require("node:path");
 app.set("views", path.join(__dirname, "views"));
 app.set("view engine", "ejs");
+
+// For uploading files
+const fs = require('fs');
+const uploadDir = 'uploads';
+if (!fs.existsSync(path.join(__dirname, uploadDir))) {
+  fs.mkdirSync(path.join(__dirname, uploadDir));
+}
 
 // This line allows express to parse the form data
 app.use(express.urlencoded({ extended: true }));

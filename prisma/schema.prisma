@@ -23,7 +23,7 @@ model File {
   name      String
   size      Int
   time      DateTime    @default(now())
-  disk_name String
+  disk_name String      @unique
 }
 
 model User {
