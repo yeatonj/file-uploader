@@ -85,6 +85,21 @@ async function getRootDirectoryDetails(userId) {
     return details;
 }
 
+async function renameDirectory(dirId, newName) {
+    await prisma.directories.update({
+        where: {
+            id: dirId
+        },
+        data: {
+            name: newName
+        },
+    });
+}
+
+async function deleteDirectory(dirId) {
+    
+}
+
 module.exports = {
   getUserFromUsername,
   getUserFromId,
@@ -92,5 +107,7 @@ module.exports = {
   addDirectory,
   getDirectoryDetails,
   getDirectoryContents,
-  getRootDirectoryDetails
+  getRootDirectoryDetails,
+  renameDirectory,
+  deleteDirectory
 }
