@@ -24,7 +24,6 @@ async function filesGet(req, res) {
         details = await getRootDirectoryDetails(parseInt(req.user.id));
     }
     const dirContents = await getDirectoryContents(details.id);
-    console.log(dirContents);
     res.render("files", {
         title: "Files in directory " + details.name,
         root: isRoot,
@@ -38,7 +37,6 @@ async function filesGet(req, res) {
 async function filesDirPost(req, res) {
     // Make sure we own the parent directory
     const details = await getDirectoryDetails(parseInt(req.body.parDir));
-    console.log(details)
     if (details.user_id !== req.user.id) {
         res.redirect("/files");
     }

@@ -10,12 +10,12 @@
         <a href="/files/<%= parent %>">.. (Parent Directory)</a>
     <% } %>
     <% for (let i = 0; i < contents.length; i++) { %>
-        <p>Contents here</p>
+        <p>Subdirectory: <a href="/files/<%= contents[i].id %>"><%= contents[i].name %></a></p>
     <%}%>
     <form action="/files/newdir" method="post">
         <label for="dirName">Add new subdirectory with name: </label>
         <input type="text" name="dirName" id="dirName" required>
-        <input type="text" name="parDir" id="parDir" hidden readonly value="<%= id %>">
+        <input type="number" name="parDir" id="parDir" hidden readonly value="<%= id %>">
         <button type="submit">Add Subdirectory</button>
     </form>
     <a href="/">Home</a>
