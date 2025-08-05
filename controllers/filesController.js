@@ -1,4 +1,4 @@
-const { getDirectoryDetails, getRootDirectoryDetails, getDirectoryContents, addDirectory } = require('../db/prismaQueries');
+const { getDirectoryDetails, getRootDirectoryDetails, getDirectoryContents, addDirectory, renameDirectory, deleteDirectory } = require('../db/prismaQueries');
 
 async function filesGet(req, res) {
     let isRoot;
@@ -45,8 +45,32 @@ async function filesDirPost(req, res) {
     res.redirect("/files/" + req.body.parDir);
 }
 
+async function filesDirRenamePost(req, res) {
+    // Make sure we own the parent directory
+    const details = await getDirectoryDetails(parseInt(req.body.dirId));
+    if (details.user_id !== req.user.id) {
+        res.redirect("/files");
+    }
+    // Now, rename
+    await renameDirectory(parseInt(req.body.dirId), req.body.newName);
+    res.redirect("/files/" + req.body.dirId);
+}
+
+async function filesDirDelete(req, res) {
+    // Make sure we own this directory
+    const details = await getDirectoryDetails(parseInt(req.body.deleteId));
+    if (details.user_id !== req.user.id) {
+        res.redirect("/files");
+    }
+    // Now, go ahead and delete.
+    await deleteDirectory(parseInt(req.body.deleteId));
+    res.redirect("/files");
+}
+
 
 module.exports = {
     filesGet,
-    filesDirPost
+    filesDirPost,
+    filesDirRenamePost,
+    filesDirDelete
 }

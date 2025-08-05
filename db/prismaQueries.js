@@ -97,7 +97,27 @@ async function renameDirectory(dirId, newName) {
 }
 
 async function deleteDirectory(dirId) {
-    
+    // First, ensure we NEVER delete a user's root directory
+    const details = await prisma.directories.findFirst({
+        where: {
+            id: dirId,
+        }
+    });
+    if (details.name === "root" && details.parent_dir === null) {
+        return;
+    }
+    // Now, go ahead and delete. We'll need to do so recursively.
+    // First, delete all subdirectories
+    const subDir = await getDirectoryContents(dirId);
+    for (let i = 0; i < subDir.length; i++) {
+        await deleteDirectory(subDir[i].id);
+    }
+    // Then, delete ourselves
+    await prisma.directories.delete({
+        where: {
+            id: dirId,
+        },
+    });
 }
 
 module.exports = {
