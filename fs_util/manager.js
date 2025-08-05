@@ -4,6 +4,7 @@ const fs = require('fs');
 
 async function deleteFile(dbpath) {
     const filePath = path.join(__dirname, uploadDir) + "/" + dbpath;
+    console.log(filePath);
     await fs.unlink(filePath, function (err) {
         if (err === null) {
             console.log(`File deleted successfully: ${filePath}`);

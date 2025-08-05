@@ -13,7 +13,7 @@
         <p>Subdirectory: <a href="/files/<%= contents[i].id %>"><%= contents[i].name %></a></p>
     <%}%>
     <% for (let i = 0; i < files.length; i++) { %>
-        <p>File: <%= files[i].disk_name %> <a href="/viewfile/<%= files[i].id %>">Details</a></p>
+        <p>File: <%= files[i].name %> <a href="/viewfile/<%= files[i].id %>">Details</a></p>
     <%}%>
 
     <form action="/viewfile/upload" method="post" enctype="multipart/form-data">

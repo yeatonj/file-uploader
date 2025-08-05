@@ -196,7 +196,8 @@ async function deleteDBFile(fileId) {
 // Allows us to delete all files in a directory
 async function deleteDirFiles(dirId) {
     // First, get all the files
-    const deleted = await prisma.file.deleteMany({
+    const deleted = await getDirFiles(dirId);
+    await prisma.file.deleteMany({
         where: {
             dir_id: dirId,
         },
