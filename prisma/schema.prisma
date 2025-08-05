@@ -14,24 +14,38 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+model File {
+  id        Int         @id @default(autoincrement())
+  owner     User        @relation(fields: [owner_id], references: [id])
+  owner_id  Int
+  dir       Directories @relation(fields: [dir_id], references: [id])
+  dir_id    Int
+  name      String
+  size      Int
+  time      DateTime    @default(now())
+  disk_name String
+}
+
 model User {
-  id          Int         @id @default(autoincrement())
-  email       String      @unique
-  first       String
-  last        String
-  password    String
+  id       Int    @id @default(autoincrement())
+  email    String @unique
+  first    String
+  last     String
+  password String
+  files    File[]
 }
 
 model Session {
   id        String   @id
   sid       String   @unique
   data      String
-  expiresAt   DateTime
+  expiresAt DateTime
 }
 
 model Directories {
-  id          Int       @id @default(autoincrement())
-  user_id     Int
-  name        String
-  parent_dir  Int?
+  id         Int    @id @default(autoincrement())
+  user_id    Int
+  name       String
+  parent_dir Int?
+  files      File[]
 }
