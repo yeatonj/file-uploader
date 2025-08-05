@@ -15,6 +15,7 @@ const indexRouter = require("./routes/indexRouter");
 const loginRouter = require("./routes/loginRouter");
 const signupRouter = require("./routes/signupRouter");
 const filesRouter = require("./routes/filesRouter");
+const viewFileRouter = require("./routes/viewFileRouter");
 
 
 // Set up ejs
@@ -62,6 +63,7 @@ app.get("/logout", (req, res, next) => {
 });
 app.use("/signup", signupRouter);
 app.use("/files", filesRouter);
+app.use("/viewfile", viewFileRouter);
 app.use("/", indexRouter);
 
 
