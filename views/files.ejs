@@ -5,7 +5,13 @@
   <title><%= title %></title>
 </head>
 <body>
-  <h1><%= title %></h1>
-  <p>We will put files here</p>
+    <h1><%= title %></h1>
+    <% if (!root) {%>
+        <a href="/files/<%= parent %>">.. (Parent Directory)</a>
+    <% } %>
+    <% for (let i = 0; i < contents.length; i++) { %>
+        <p>Contents here</p>
+    <%}%>
+    <a href="/">Home</a>
 </body>
 </html>

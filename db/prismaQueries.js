@@ -75,11 +75,22 @@ async function getDirectoryContents(dirId) {
     return contents;
 }
 
+async function getRootDirectoryDetails(userId) {
+    const details = await prisma.directories.findFirst({
+        where: {
+            user_id: userId,
+            parent_dir: null
+        }
+    });
+    return details;
+}
+
 module.exports = {
   getUserFromUsername,
   getUserFromId,
   addUser,
   addDirectory,
   getDirectoryDetails,
-  getDirectoryContents
+  getDirectoryContents,
+  getRootDirectoryDetails
 }
